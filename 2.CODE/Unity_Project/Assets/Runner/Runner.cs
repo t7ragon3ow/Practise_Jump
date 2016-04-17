@@ -20,10 +20,12 @@ public class Runner : MonoBehaviour {
 
     private static int boosts;
 	// Use this for initialization
+
+    Animator anim;
 	void Start () {
 
         boosts = 0;
-
+        anim = GetComponent<Animator>();
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
         startPosition = transform.localPosition;
@@ -40,6 +42,8 @@ public class Runner : MonoBehaviour {
 	void Update () {
         if (touchingPlatform && (Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0)))
         {
+            anim.SetTrigger("Jump");
+            anim.Play("Runner_Fly");
             GetComponent<Rigidbody>().AddForce(jumpVelocity[index], ForceMode.VelocityChange);
             touchingPlatform = false;
         }

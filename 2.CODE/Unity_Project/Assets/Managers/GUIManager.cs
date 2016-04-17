@@ -1,37 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Advertisements;
 
-public class GUIManager : MonoBehaviour {
-    public GUIText boostsText, distanceText, gameOverText, instructionsText, runnerText;
+public class GUIManager : MonoBehaviour
+{
+    public GUIText boostsText, distanceText;
+    public GameObject mainMenu, btnPlay;
     private static GUIManager instance;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         instance = this;
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
-        gameOverText.enabled = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0))
-        {
-            GameEventManager.TriggerGameStart();
-        }
-	}
+        boostsText.enabled = false;
+        distanceText.enabled = false;
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
+    }
+
+    public void TriggerGameStart()
+    {
+        GameEventManager.TriggerGameStart();
+    }
     private void GameStart()
     {
-        gameOverText.enabled = false;
-        instructionsText.enabled = false;
-        runnerText.enabled = false;
+        boostsText.enabled = true;
+        distanceText.enabled = true;
+
+        instance.mainMenu.SetActive(false);
         enabled = false;
     }
 
     private void GameOver()
     {
-        gameOverText.enabled = true;
-        instructionsText.enabled = true;
+        boostsText.enabled = false;
+        distanceText.enabled = false;
+        instance.mainMenu.SetActive(true);
         enabled = true;
     }
 
@@ -43,5 +51,18 @@ public class GUIManager : MonoBehaviour {
     public static void SetDistance(float distance)
     {
         instance.distanceText.text = distance.ToString("f0");
+    }
+
+    public void showAds()
+    {
+        StartCoroutine(ShowAdWhenReady());
+    }
+
+    IEnumerator ShowAdWhenReady()
+    {
+        while (!Advertisement.IsReady())
+            yield return null;
+
+        Advertisement.Show();
     }
 }
