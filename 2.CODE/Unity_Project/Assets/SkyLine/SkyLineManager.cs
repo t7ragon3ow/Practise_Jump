@@ -17,6 +17,7 @@ public class SkyLineManager : MonoBehaviour {
 	void Start () {
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
+        GameEventManager.GamePause += GamePause;
 
         objectQueue = new Queue<Transform>(numberOfObjects);
         for (int i = 0; i < numberOfObjects; i++)
@@ -27,8 +28,14 @@ public class SkyLineManager : MonoBehaviour {
         enabled = false;
 	}
 
+    private void GamePause()
+    {
+        Time.timeScale = 0;
+    }
+
     private void GameStart()
     {
+        Time.timeScale = 1;
         nextPosition = startPosition;
         for (int i = 0; i < numberOfObjects; i++)
         {
